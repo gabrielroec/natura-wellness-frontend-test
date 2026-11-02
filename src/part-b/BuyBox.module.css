@@ -78,6 +78,12 @@
   background: #e7e1d6;
 }
 
+.options {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 @media (max-width: 1199px) {
   .page {
     grid-template-columns: minmax(0, 540px);

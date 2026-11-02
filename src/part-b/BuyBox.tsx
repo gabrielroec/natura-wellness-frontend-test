@@ -1,5 +1,7 @@
+import { useState } from "react";
 import styles from "./BuyBox.module.css";
 import { copy } from "./copy";
+import { PurchaseOption } from "./PurchaseOption";
 
 function Star() {
   return (
@@ -10,6 +12,8 @@ function Star() {
 }
 
 export function BuyBox() {
+  const [option, setOption] = useState<"oneTime" | "subscribe">("subscribe");
+
   return (
     <main className={styles.page}>
       <div className={styles.photoCard}>
@@ -31,6 +35,20 @@ export function BuyBox() {
         <h1 className={styles.title}>{copy.title}</h1>
         <p className={styles.subtitle}>{copy.subtitle}</p>
         <hr className={styles.divider} />
+        <div className={styles.options} role="radiogroup" aria-label="Purchase option">
+          <PurchaseOption
+            label={copy.oneTime.label}
+            priceCents={copy.oneTime.priceCents}
+            selected={option === "oneTime"}
+            onSelect={() => setOption("oneTime")}
+          />
+          <PurchaseOption
+            label={copy.subscribe.label}
+            priceCents={copy.subscribe.priceCents}
+            selected={option === "subscribe"}
+            onSelect={() => setOption("subscribe")}
+          />
+        </div>
       </div>
     </main>
   );

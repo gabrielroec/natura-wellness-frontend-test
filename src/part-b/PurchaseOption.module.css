@@ -1,0 +1,63 @@
+.option {
+  border: 1px solid #e1dbcf;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.selected {
+  border: 2px solid #17402f;
+  background: #f3f6f2;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  cursor: pointer;
+}
+
+.selected .row {
+  padding: 17px 19px;
+}
+
+.radio {
+  display: grid;
+  flex: none;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #9aa59e;
+  border-radius: 50%;
+  appearance: none;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.radio:checked {
+  border-color: #17402f;
+}
+
+.radio:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #17402f;
+}
+
+.radio:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: 2px;
+}
+
+.label {
+  font: 600 16px Inter, sans-serif;
+  color: #1c2420;
+}
+
+.price {
+  margin-left: auto;
+  font: 600 18px/22px Inter, sans-serif;
+  color: #1c2420;
+}
