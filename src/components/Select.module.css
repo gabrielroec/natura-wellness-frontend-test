@@ -1,0 +1,30 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.select {
+  width: 115.5px;
+  height: 33px;
+  padding: 1px 36px 0 12px;
+  border: 1px solid #cfd6d0;
+  border-radius: 8px;
+  appearance: none;
+  background: #ffffff;
+  font: 500 14px Inter, sans-serif;
+  color: #1c2420;
+  cursor: pointer;
+}
+
+.select:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: 2px;
+}
+
+.chevron {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Select } from "../components/Select";
 import styles from "./BuyBox.module.css";
 import { copy } from "./copy";
 import { PurchaseOption } from "./PurchaseOption";
@@ -11,8 +12,17 @@ function Star() {
   );
 }
 
+function Check() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3 8.5 6 11.5 13 4.5" stroke="#17402f" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
 export function BuyBox() {
   const [option, setOption] = useState<"oneTime" | "subscribe">("subscribe");
+  const [frequency, setFrequency] = useState(copy.subscribe.frequencyOptions[0]);
 
   return (
     <main className={styles.page}>
@@ -45,9 +55,28 @@ export function BuyBox() {
           <PurchaseOption
             label={copy.subscribe.label}
             priceCents={copy.subscribe.priceCents}
+            comparePriceCents={copy.subscribe.comparePriceCents}
+            badge={copy.subscribe.badge}
             selected={option === "subscribe"}
             onSelect={() => setOption("subscribe")}
-          />
+          >
+            {option === "subscribe" && (
+              <>
+                <label className={styles.frequency}>
+                  {copy.subscribe.frequencyLabel}
+                  <Select value={frequency} options={copy.subscribe.frequencyOptions} onChange={setFrequency} />
+                </label>
+                <ul className={styles.perks}>
+                  {copy.subscribe.perks.map((perk) => (
+                    <li key={perk} className={styles.perk}>
+                      <Check />
+                      {perk}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </PurchaseOption>
         </div>
       </div>
     </main>

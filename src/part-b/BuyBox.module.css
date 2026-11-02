@@ -84,6 +84,31 @@
   margin-top: 24px;
 }
 
+.frequency {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font: 400 14px Inter, sans-serif;
+  color: #4a5550;
+}
+
+.perks {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.perk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 14px Inter, sans-serif;
+  color: #1c2420;
+}
+
 @media (max-width: 1199px) {
   .page {
     grid-template-columns: minmax(0, 540px);
