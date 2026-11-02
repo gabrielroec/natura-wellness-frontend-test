@@ -1,0 +1,23 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 12px;
+  background: #17402f;
+  font: 600 16px Inter, sans-serif;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #123325;
+}
+
+.button:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: 2px;
+}

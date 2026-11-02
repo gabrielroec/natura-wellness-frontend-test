@@ -109,6 +109,19 @@
   color: #1c2420;
 }
 
+.actions {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.dot {
+  margin-inline: 0.125px;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
 @media (max-width: 1199px) {
   .page {
     grid-template-columns: minmax(0, 540px);

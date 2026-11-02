@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { Button } from "../components/Button";
 import { Select } from "../components/Select";
+import { formatPrice } from "../utils/formatPrice";
 import styles from "./BuyBox.module.css";
 import { copy } from "./copy";
 import { PurchaseOption } from "./PurchaseOption";
+import { QuantityStepper } from "./QuantityStepper";
 
 function Star() {
   return (
@@ -23,6 +26,10 @@ function Check() {
 export function BuyBox() {
   const [option, setOption] = useState<"oneTime" | "subscribe">("subscribe");
   const [frequency, setFrequency] = useState(copy.subscribe.frequencyOptions[0]);
+  const [quantity, setQuantity] = useState(1);
+
+  const unitPriceCents = option === "subscribe" ? copy.subscribe.priceCents : copy.oneTime.priceCents;
+  const totalCents = unitPriceCents * quantity;
 
   return (
     <main className={styles.page}>
@@ -77,6 +84,16 @@ export function BuyBox() {
               </>
             )}
           </PurchaseOption>
+        </div>
+        <div className={styles.actions}>
+          <QuantityStepper value={quantity} onChange={setQuantity} />
+          <Button>
+            {copy.addToCart}
+            <span className={styles.dot} aria-hidden="true">
+              ·
+            </span>
+            {formatPrice(totalCents)}
+          </Button>
         </div>
       </div>
     </main>

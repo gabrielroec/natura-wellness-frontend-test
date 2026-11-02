@@ -1,0 +1,34 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  border: 1px solid #cfd6d0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.button {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 11px;
+  background: none;
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: -2px;
+}
+
+.value {
+  flex: 1;
+  font: 600 16px Inter, sans-serif;
+  text-align: center;
+  color: #1c2420;
+}
