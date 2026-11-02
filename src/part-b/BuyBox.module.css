@@ -4,6 +4,7 @@
   column-gap: 64px;
   justify-content: center;
   align-items: start;
+  align-content: start;
   flex: 1;
   padding-block: 56px;
   background: #fbf8f3;
@@ -22,9 +23,65 @@
   height: auto;
 }
 
+.eyebrow {
+  font: 600 12px Inter, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6b7a70;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font: 400 14px Inter, sans-serif;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.stars svg {
+  display: block;
+}
+
+.ratingValue {
+  font-weight: 600;
+  color: #1c2420;
+}
+
+.reviews {
+  color: #6b7a70;
+  text-underline-offset: 3px;
+}
+
+.title {
+  margin-top: 12px;
+  font: 500 44px/1.1 Fraunces, serif;
+  letter-spacing: -0.01em;
+  color: #17402f;
+}
+
+.subtitle {
+  max-width: 440px;
+  margin-top: 12px;
+  font: 400 16px/1.55 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.divider {
+  height: 1px;
+  margin-top: 28px;
+  border: 0;
+  background: #e7e1d6;
+}
+
 @media (max-width: 1199px) {
   .page {
     grid-template-columns: minmax(0, 540px);
+    row-gap: 24px;
     padding: 24px 16px;
   }
 }
