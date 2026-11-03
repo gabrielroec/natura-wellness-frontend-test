@@ -23,6 +23,15 @@ function Check() {
   );
 }
 
+function TrustIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#17402f" strokeWidth="1.5" aria-hidden="true">
+      <circle cx="8" cy="8" r="6.25" />
+      <path d="M5.45 8.19 7.28 10.05 10.67 6.34" />
+    </svg>
+  );
+}
+
 export function BuyBox() {
   const [option, setOption] = useState<"oneTime" | "subscribe">("subscribe");
   const [frequency, setFrequency] = useState(copy.subscribe.frequencyOptions[0]);
@@ -30,6 +39,7 @@ export function BuyBox() {
 
   const unitPriceCents = option === "subscribe" ? copy.subscribe.priceCents : copy.oneTime.priceCents;
   const totalCents = unitPriceCents * quantity;
+  const finePrint = copy.finePrint.replace("30 days", frequency).replace("$25.46", formatPrice(totalCents));
 
   return (
     <main className={styles.page}>
@@ -95,6 +105,15 @@ export function BuyBox() {
             {formatPrice(totalCents)}
           </Button>
         </div>
+        <ul className={styles.trust}>
+          {copy.trust.map((item) => (
+            <li key={item} className={styles.trustItem}>
+              <TrustIcon />
+              {item}
+            </li>
+          ))}
+        </ul>
+        {option === "subscribe" && <p className={styles.finePrint}>{finePrint}</p>}
       </div>
     </main>
   );
