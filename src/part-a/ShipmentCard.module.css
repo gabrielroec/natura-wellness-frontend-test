@@ -68,3 +68,9 @@
   font: 600 16px/1.4 Inter, sans-serif;
   color: #1c2420;
 }
+
+.couponNote {
+  margin-top: 8px;
+  font: 400 13px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}

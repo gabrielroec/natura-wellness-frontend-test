@@ -25,6 +25,12 @@
   outline: none;
 }
 
+.display {
+  font: 500 26px/1.2 Fraunces, serif;
+  color: #17402f;
+  outline: none;
+}
+
 @media (max-width: 480px) {
   .sheet {
     width: 100%;

@@ -7,6 +7,7 @@
   border-style: solid;
   border-radius: 12px;
   outline: none;
+  scroll-margin-top: 16px;
 }
 
 .banner > svg {

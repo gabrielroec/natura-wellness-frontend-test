@@ -3,12 +3,16 @@ import { catalog, fixtures } from "../api/fixtures";
 import type { Subscription } from "../api/types";
 import { addDays } from "../utils/dates";
 import {
+  applyCancel,
   applyPause,
+  applyReactivate,
   applyResume,
   applySimulatedSkip,
   applySkip,
   buildView,
+  cancelOffers,
   chargeDateAfterSkip,
+  chargeDateOnReactivate,
   nextChargeWithItems,
   swapCandidates,
   swapItem,
@@ -122,6 +126,128 @@ describe("products", () => {
     expect(view.nextChargeTotalCents).toBe(nextChargeWithItems(buildView(active), items));
     expect(view.subtotalCents).toBe(7985);
     expect(view.savingsCents).toBe(1198);
+  });
+});
+
+describe("cancel offers", () => {
+  const paused = fixtures.paused();
+  const skip = { kind: "skip" };
+  const frequency = (days: number) => ({ kind: "frequency", days });
+  const reduce = { kind: "reduce" };
+  const pause = (couponPercent: number | null) => ({ kind: "pause", couponPercent });
+  const coupon = { kind: "coupon", percent: 10 };
+  const swap = (couponPercent: number | null) => ({ kind: "swap", couponPercent });
+
+  it("offers skip or a longer interval for too much product", () => {
+    expect(cancelOffers("tooMuchProduct", buildView(active))).toEqual([skip, frequency(60)]);
+    expect(cancelOffers("tooMuchProduct", buildView(active, { skipUsed: true }))).toEqual([frequency(60)]);
+    expect(cancelOffers("tooMuchProduct", buildView(active, { intervalDays: 60 }))).toEqual([skip, frequency(90)]);
+    expect(cancelOffers("tooMuchProduct", buildView(active, { intervalDays: 90 }))).toEqual([skip]);
+  });
+
+  it("offers pause when skip and a longer interval are gone", () => {
+    const view = buildView(active, { skipUsed: true, intervalDays: 90 });
+    expect(cancelOffers("tooMuchProduct", view)).toEqual([pause(null)]);
+  });
+
+  it("offers reduce or pause for the price, with the coupon on the pause path", () => {
+    expect(cancelOffers("tooExpensive", buildView(active))).toEqual([reduce, pause(10)]);
+    expect(cancelOffers("tooExpensive", buildView(active, { couponPercent: 5 }))).toEqual([reduce, pause(null)]);
+  });
+
+  it("hides reduce when every quantity is 1", () => {
+    const items = active.items.map((item) => ({ ...item, quantity: 1 }));
+    expect(cancelOffers("tooExpensive", buildView(active, { items }))).toEqual([pause(10)]);
+  });
+
+  it("offers a swap, with 5% off only when no coupon is in use", () => {
+    expect(cancelOffers("differentProduct", buildView(active))).toEqual([swap(null)]);
+    expect(cancelOffers("noResults", buildView(active))).toEqual([swap(5)]);
+    expect(cancelOffers("other", buildView(active))).toEqual([swap(5)]);
+    expect(cancelOffers("noResults", buildView(active, { couponPercent: 10 }))).toEqual([swap(null)]);
+  });
+
+  it("never offers skip or pause on a paused subscription", () => {
+    const reasons = ["tooMuchProduct", "tooExpensive", "differentProduct", "noResults", "other"] as const;
+    for (const reason of reasons) {
+      const kinds = cancelOffers(reason, buildView(paused)).map((offer) => offer.kind);
+      expect(kinds).not.toContain("skip");
+      expect(kinds).not.toContain("pause");
+    }
+    expect(cancelOffers("tooMuchProduct", buildView(paused))).toEqual([frequency(60)]);
+    expect(cancelOffers("tooExpensive", buildView(paused))).toEqual([coupon, reduce]);
+    expect(cancelOffers("noResults", buildView(paused))).toEqual([swap(5)]);
+  });
+
+  it("falls back to the coupon, then a swap, on a paused subscription", () => {
+    expect(cancelOffers("tooMuchProduct", buildView(paused, { intervalDays: 90 }))).toEqual([coupon]);
+    expect(cancelOffers("tooMuchProduct", buildView(paused, { intervalDays: 90, couponPercent: 10 }))).toEqual([swap(null)]);
+    const items = paused.items.map((item) => ({ ...item, quantity: 1 }));
+    expect(cancelOffers("tooExpensive", buildView(paused, { items }))).toEqual([coupon]);
+    expect(cancelOffers("tooExpensive", buildView(paused, { items, couponPercent: 10 }))).toEqual([swap(null)]);
+  });
+});
+
+describe("coupons", () => {
+  it("takes 10% off the next charge", () => {
+    const view = buildView(active, { couponPercent: 10 });
+    expect(view.nextChargeTotalCents).toBe(9168);
+    expect(view.couponSavingsCents).toBe(1019);
+    expect(view.regularTotalCents).toBe(10187);
+    expect(view.savingsCents).toBe(1798);
+  });
+
+  it("takes 5% off the next charge", () => {
+    const view = buildView(active, { couponPercent: 5 });
+    expect(view.nextChargeTotalCents).toBe(9678);
+    expect(view.couponSavingsCents).toBe(509);
+  });
+
+  it("previews a coupon that isn't applied yet", () => {
+    const magnesium = catalog.find((product) => product.sku === "NW-MAG-90")!;
+    const items = swapItem(active.items, "NW-MULTI-30", magnesium);
+    expect(nextChargeWithItems(buildView(active), items, 5)).toBe(6448);
+    expect(buildView(active, { items, couponPercent: 5 }).nextChargeTotalCents).toBe(6448);
+  });
+});
+
+describe("cancel and reactivate", () => {
+  const now = new Date("2026-11-03T12:00:00.000Z");
+  const today = now.toISOString();
+
+  it("cancels and drops the coupon", () => {
+    const view = buildView(active, applyCancel({ couponPercent: 10 }, now), now);
+    expect(view.status).toBe("cancelled");
+    expect(view.cancelledAt).toBe(today);
+    expect(view.nextChargeAt).toBeNull();
+    expect(view.couponPercent).toBeNull();
+    expect(view.canSkip).toBe(false);
+    expect(view.nextChargeTotalCents).toBe(10187);
+  });
+
+  it("cancels a paused subscription", () => {
+    const view = buildView(fixtures.paused(), applyCancel({}, now), now);
+    expect(view.status).toBe("cancelled");
+    expect(view.pausedUntil).toBeNull();
+    expect(view.chargeDateOnResume).toBeNull();
+  });
+
+  it("reactivates with the next charge one interval from today", () => {
+    const cancelled = applyCancel({ skipUsed: true, intervalDays: 60 }, now);
+    const view = buildView(active, applyReactivate(active, cancelled, now), now);
+    expect(view.status).toBe("active");
+    expect(view.nextChargeAt).toBe(addDays(today, 60));
+    expect(view.cancelledAt).toBeNull();
+    expect(view.canSkip).toBe(true);
+    expect(chargeDateOnReactivate(buildView(active, cancelled, now), now)).toBe(view.nextChargeAt);
+  });
+
+  it.each(["paused", "cancelled"] as const)("reactivates when the API says %s", (status) => {
+    const server = fixtures[status]();
+    const view = buildView(server, applyReactivate(server, {}, now), now);
+    expect(view.status).toBe("active");
+    expect(view.nextChargeAt).toBe(addDays(today, server.intervalDays));
+    expect(view.nextChargeTotalCents).toBe(10187);
   });
 });
 

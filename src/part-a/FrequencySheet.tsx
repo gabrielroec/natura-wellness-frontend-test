@@ -16,15 +16,17 @@ type FrequencySheetProps = {
 };
 
 export function FrequencySheet({ view, open, onClose, onSave }: FrequencySheetProps) {
-  const [selected, setSelected] = useState(view.intervalDays);
+  const [picked, setPicked] = useState<number | null>(null);
+  const selected = picked ?? view.intervalDays;
 
   function close() {
-    setSelected(view.intervalDays);
+    setPicked(null);
     onClose();
   }
 
   function save() {
-    if (selected === view.intervalDays) close();
+    setPicked(null);
+    if (selected === view.intervalDays) onClose();
     else onSave(selected);
   }
 
@@ -40,7 +42,7 @@ export function FrequencySheet({ view, open, onClose, onSave }: FrequencySheetPr
           name="delivery-frequency"
           legend={copy.frequency.title}
           value={selected}
-          onChange={setSelected}
+          onChange={setPicked}
           options={copy.frequency.options.map((days) => ({
             value: days,
             label: `${copy.frequency.every} ${days} ${copy.frequency.days}`,
@@ -50,7 +52,7 @@ export function FrequencySheet({ view, open, onClose, onSave }: FrequencySheetPr
       </div>
       <div className={styles.preview} aria-live="polite">
         <p>{preview}</p>
-        <p className={styles.amount}>{`${formatPrice(view.nextChargeTotalCents)} ${copy.frequency.perDelivery}`}</p>
+        <p className={styles.amount}>{`${formatPrice(view.regularTotalCents)} ${copy.frequency.perDelivery}`}</p>
       </div>
       <div className={styles.actions}>
         <Button onClick={save}>{copy.frequency.save}</Button>

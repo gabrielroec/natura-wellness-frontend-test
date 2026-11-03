@@ -17,8 +17,10 @@ type ActiveScreenProps = {
   onSkip: () => Promise<void>;
   onRefresh: () => Promise<SubscriptionView>;
   onChangeFrequency: (days: number) => void;
-  onChangeProducts: (items: SubscriptionItem[]) => void;
+  onChangeProducts: (items: SubscriptionItem[], couponPercent: number | null) => void;
+  onApplyCoupon: (percent: number) => void;
   onPause: (days: number) => void;
+  onCancel: () => void;
   onNotice: (message: string, tone?: BannerTone) => void;
   onContactSupport: (subject: string) => void;
 };
@@ -29,7 +31,9 @@ export function ActiveScreen({
   onRefresh,
   onChangeFrequency,
   onChangeProducts,
+  onApplyCoupon,
   onPause,
+  onCancel,
   onNotice,
   onContactSupport,
 }: ActiveScreenProps) {
@@ -73,7 +77,10 @@ export function ActiveScreen({
         view={view}
         onChangeFrequency={onChangeFrequency}
         onChangeProducts={onChangeProducts}
+        onApplyCoupon={onApplyCoupon}
         onPause={onPause}
+        onOpenSkip={() => setSkipOpen(true)}
+        onCancel={onCancel}
         onNotice={onNotice}
       />
       {view.canSkip && (

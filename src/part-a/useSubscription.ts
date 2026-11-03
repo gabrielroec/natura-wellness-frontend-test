@@ -2,7 +2,16 @@ import { useEffect, useState } from "react";
 import { getSubscription } from "../api/mockApi";
 import { ApiError, type Subscription, type SubscriptionItem } from "../api/types";
 import { reloadSubscription, simulatedWait, skipShipment } from "./scenarioApi";
-import { applyPause, applyResume, applySimulatedSkip, applySkip, buildView, type LocalChanges } from "./subscriptionView";
+import {
+  applyCancel,
+  applyPause,
+  applyReactivate,
+  applyResume,
+  applySimulatedSkip,
+  applySkip,
+  buildView,
+  type LocalChanges,
+} from "./subscriptionView";
 
 export type LoadState =
   | { phase: "loading" }
@@ -56,8 +65,12 @@ export function useSubscription() {
     setChanges((current) => ({ ...current, intervalDays: days }));
   }
 
-  function changeProducts(items: SubscriptionItem[]) {
-    setChanges((current) => ({ ...current, items }));
+  function changeProducts(items: SubscriptionItem[], couponPercent: number | null) {
+    setChanges((current) => ({ ...current, items, couponPercent: couponPercent ?? current.couponPercent }));
+  }
+
+  function applyCoupon(percent: number) {
+    setChanges((current) => ({ ...current, couponPercent: percent }));
   }
 
   function pause(days: number) {
@@ -68,6 +81,14 @@ export function useSubscription() {
     if (state.phase === "ready") setChanges((current) => applyResume(state.server, current));
   }
 
+  function cancel() {
+    setChanges((current) => applyCancel(current));
+  }
+
+  function reactivate() {
+    if (state.phase === "ready") setChanges((current) => applyReactivate(state.server, current));
+  }
+
   return {
     state,
     view,
@@ -76,7 +97,10 @@ export function useSubscription() {
     refresh,
     changeFrequency,
     changeProducts,
+    applyCoupon,
     pause,
     resume,
+    cancel,
+    reactivate,
   };
 }

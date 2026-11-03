@@ -37,11 +37,22 @@ export function ShipmentCard({ view, title, muted = false }: ShipmentCardProps) 
             <dt>{`${copy.shipment.savings} (${view.discountPercent}%)`}</dt>
             <dd>{`−${formatPrice(view.savingsCents)}`}</dd>
           </div>
+          {view.couponPercent && (
+            <div className={styles.line}>
+              <dt>{`${view.couponPercent}% ${copy.shipment.coupon}`}</dt>
+              <dd>{`\u2212${formatPrice(view.couponSavingsCents)}`}</dd>
+            </div>
+          )}
           <div className={`${styles.line} ${styles.total}`}>
             <dt>{copy.shipment.total}</dt>
             <dd>{formatPrice(view.nextChargeTotalCents)}</dd>
           </div>
         </dl>
+      )}
+      {!muted && view.couponPercent && (
+        <p className={styles.couponNote}>
+          {`${copy.shipment.couponOnly} ${formatPrice(view.regularTotalCents)} ${copy.shipment.perDelivery}`}
+        </p>
       )}
     </Card>
   );

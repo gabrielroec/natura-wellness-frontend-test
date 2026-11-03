@@ -53,6 +53,19 @@
   color: #6b7a70;
 }
 
+.danger {
+  height: 56px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #8a2f1c;
+  font: 600 16px Inter, sans-serif;
+  color: #ffffff;
+}
+
+.danger:hover {
+  background: #742717;
+}
+
 .quiet {
   min-height: 44px;
   padding: 0 12px;

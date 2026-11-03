@@ -4,6 +4,8 @@ import styles from "./Sheet.module.css";
 type SheetProps = {
   open: boolean;
   title: string;
+  display?: boolean;
+  eyebrow?: ReactNode;
   onClose: () => void;
   locked?: boolean;
   children: ReactNode;
@@ -11,7 +13,7 @@ type SheetProps = {
 
 const DOUBLE_TAP_MS = 400;
 
-export function Sheet({ open, title, onClose, locked = false, children }: SheetProps) {
+export function Sheet({ open, title, display = false, eyebrow, onClose, locked = false, children }: SheetProps) {
   const dialog = useRef<HTMLDialogElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const openedAt = useRef(0);
@@ -29,7 +31,10 @@ export function Sheet({ open, title, onClose, locked = false, children }: SheetP
   }, [open]);
 
   useEffect(() => {
-    if (dialog.current?.open) heading.current?.focus();
+    if (dialog.current?.open) {
+      heading.current?.focus();
+      openedAt.current = performance.now();
+    }
   }, [title]);
 
   function requestClose() {
@@ -53,7 +58,8 @@ export function Sheet({ open, title, onClose, locked = false, children }: SheetP
       }}
     >
       <div className={styles.content}>
-        <h2 id={titleId} className={styles.title} ref={heading} tabIndex={-1}>
+        {eyebrow}
+        <h2 id={titleId} className={display ? styles.display : styles.title} ref={heading} tabIndex={-1}>
           {title}
         </h2>
         {children}

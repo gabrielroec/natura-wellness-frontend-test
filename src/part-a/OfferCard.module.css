@@ -1,0 +1,128 @@
+.hero {
+  display: grid;
+  justify-items: start;
+  width: 100%;
+  padding: 18px;
+  border: 0;
+  border-radius: 16px;
+  background-color: #17402f;
+  background-image: radial-gradient(circle at 100% 0, rgba(232, 195, 106, 0.24), transparent 60%);
+  text-align: left;
+  cursor: pointer;
+}
+
+.hero:focus-visible,
+.soft:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: 2px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  background: #f6e7c4;
+  font: 600 12px/1.3 Inter, sans-serif;
+  color: #6b4e0f;
+}
+
+.tag svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.label {
+  margin-top: 12px;
+  font: 500 23px/1.2 Fraunces, serif;
+  color: #ffffff;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.discounted {
+  font: 500 38px/1.1 Fraunces, serif;
+  color: #ffffff;
+}
+
+.usual {
+  font: 400 16px/1.2 Inter, sans-serif;
+  color: #c5dccb;
+}
+
+.detail {
+  margin-top: 4px;
+  font: 400 14px/1.4 Inter, sans-serif;
+  color: #dfeae3;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 14px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: #e8c36a;
+  font: 600 16px/1.3 Inter, sans-serif;
+  color: #17402f;
+}
+
+.hero:hover .cta {
+  background: #f0d083;
+}
+
+.soft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 14px;
+  border: 1px solid #eedfb8;
+  border-radius: 12px;
+  background: #fdf7e8;
+  text-align: left;
+  cursor: pointer;
+}
+
+.soft:hover {
+  border-color: #c9a95c;
+}
+
+.softIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f6e7c4;
+  color: #6b4e0f;
+}
+
+.softText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.softLabel {
+  font: 600 15px/1.35 Inter, sans-serif;
+  color: #17402f;
+}
+
+.softDetail {
+  font: 400 13px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}

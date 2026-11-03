@@ -12,19 +12,28 @@ import { nextChargeWithItems, swapCandidates, swapItem, type SubscriptionView } 
 
 type ProductsSheetProps = {
   view: SubscriptionView;
+  swapCouponPercent: number | null;
   open: boolean;
   onClose: () => void;
-  onSave: (items: SubscriptionItem[]) => void;
+  onSave: (items: SubscriptionItem[], couponPercent: number | null) => void;
 };
 
-export function ProductsSheet({ view, open, onClose, onSave }: ProductsSheetProps) {
+export function ProductsSheet({ view, swapCouponPercent, open, onClose, onSave }: ProductsSheetProps) {
   const [draft, setDraft] = useState(view.items);
   const [swappingSku, setSwappingSku] = useState<string | null>(null);
   const swapping = draft.find((item) => item.sku === swappingSku);
   const changed = draft.some(
     (item, index) => item.sku !== view.items[index].sku || item.quantity !== view.items[index].quantity,
   );
+  const swapped = draft.some((item, index) => item.sku !== view.items[index].sku);
+  const earnedCoupon = swapped ? swapCouponPercent : null;
+  const couponPercent = earnedCoupon ?? view.couponPercent;
   const previous = changed ? ` (${copy.products.was} ${formatPrice(view.nextChargeTotalCents)})` : "";
+  const coupon = couponPercent ? ` ${copy.products.and} ${couponPercent}% ${copy.products.coupon}` : "";
+  const savingsNote =
+    swapCouponPercent && !swapped
+      ? `${copy.products.swapFor} ${swapCouponPercent}% ${copy.products.offNext}`
+      : `${copy.products.includes} ${view.discountPercent}% ${copy.products.savings}${coupon}.`;
 
   function close() {
     setDraft(view.items);
@@ -94,11 +103,11 @@ export function ProductsSheet({ view, open, onClose, onSave }: ProductsSheetProp
             ))}
           </ul>
           <div className={styles.preview} aria-live="polite">
-            <p>{`${copy.products.nextCharge} ${formatPrice(nextChargeWithItems(view, draft))}${previous}`}</p>
-            <p className={styles.savings}>{`${copy.products.includes} ${view.discountPercent}% ${copy.products.savings}`}</p>
+            <p>{`${copy.products.nextCharge} ${formatPrice(nextChargeWithItems(view, draft, couponPercent))}${previous}`}</p>
+            <p className={styles.savings}>{savingsNote}</p>
           </div>
           <div className={styles.actions}>
-            <Button onClick={() => (changed ? onSave(draft) : close())}>{copy.products.save}</Button>
+            <Button onClick={() => (changed ? onSave(draft, earnedCoupon) : close())}>{copy.products.save}</Button>
             <Button variant="secondary" onClick={close}>
               {copy.products.close}
             </Button>

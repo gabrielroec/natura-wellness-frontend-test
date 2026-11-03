@@ -4,8 +4,8 @@ import { Button } from "../components/Button";
 import { formatDate, formatRelativeDate } from "../utils/dates";
 import { formatPrice } from "../utils/formatPrice";
 import { copy } from "./copy";
+import { ChargeConfirmSheet } from "./ChargeConfirmSheet";
 import { ManageSection } from "./ManageSection";
-import { ResumeSheet } from "./ResumeSheet";
 import { ShipmentCard } from "./ShipmentCard";
 import type { SubscriptionView } from "./subscriptionView";
 import { SummaryCard } from "./SummaryCard";
@@ -13,12 +13,22 @@ import { SummaryCard } from "./SummaryCard";
 type PausedScreenProps = {
   view: SubscriptionView;
   onChangeFrequency: (days: number) => void;
-  onChangeProducts: (items: SubscriptionItem[]) => void;
+  onChangeProducts: (items: SubscriptionItem[], couponPercent: number | null) => void;
+  onApplyCoupon: (percent: number) => void;
   onResume: () => void;
+  onCancel: () => void;
   onNotice: (message: string) => void;
 };
 
-export function PausedScreen({ view, onChangeFrequency, onChangeProducts, onResume, onNotice }: PausedScreenProps) {
+export function PausedScreen({
+  view,
+  onChangeFrequency,
+  onChangeProducts,
+  onApplyCoupon,
+  onResume,
+  onCancel,
+  onNotice,
+}: PausedScreenProps) {
   const [resumeOpen, setResumeOpen] = useState(false);
   if (!view.pausedUntil || !view.chargeDateOnResume) return null;
   const amount = formatPrice(view.nextChargeTotalCents);
@@ -47,9 +57,20 @@ export function PausedScreen({ view, onChangeFrequency, onChangeProducts, onResu
         view={view}
         onChangeFrequency={onChangeFrequency}
         onChangeProducts={onChangeProducts}
+        onApplyCoupon={onApplyCoupon}
+        onCancel={onCancel}
         onNotice={onNotice}
       />
-      <ResumeSheet view={view} open={resumeOpen} onClose={() => setResumeOpen(false)} onConfirm={confirmResume} />
+      <ChargeConfirmSheet
+        view={view}
+        open={resumeOpen}
+        title={copy.resume.title}
+        date={view.chargeDateOnResume}
+        confirmLabel={copy.resume.confirm}
+        keepLabel={copy.resume.keep}
+        onClose={() => setResumeOpen(false)}
+        onConfirm={confirmResume}
+      />
     </>
   );
 }

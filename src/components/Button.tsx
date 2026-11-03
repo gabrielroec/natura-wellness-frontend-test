@@ -4,7 +4,7 @@ import styles from "./Button.module.css";
 type ButtonProps = {
   children: ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "quiet";
+  variant?: "primary" | "secondary" | "danger" | "quiet";
   disabled?: boolean;
   label?: string;
 };

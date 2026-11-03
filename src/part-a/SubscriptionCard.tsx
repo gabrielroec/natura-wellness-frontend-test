@@ -11,13 +11,28 @@ import { SupportSheet } from "./SupportSheet";
 import { useSubscription } from "./useSubscription";
 
 export function SubscriptionCard() {
-  const { state, view, retry, skip, refresh, changeFrequency, changeProducts, pause, resume } = useSubscription();
+  const {
+    state,
+    view,
+    retry,
+    skip,
+    refresh,
+    changeFrequency,
+    changeProducts,
+    applyCoupon,
+    pause,
+    resume,
+    cancel,
+    reactivate,
+  } = useSubscription();
   const [notice, setNotice] = useState<{ message: string; tone?: BannerTone } | null>(null);
   const [supportSubject, setSupportSubject] = useState<string | null>(null);
   const banner = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (notice && document.activeElement === document.body) banner.current?.focus();
+    if (!notice) return;
+    banner.current?.scrollIntoView({ block: "nearest" });
+    if (document.activeElement === document.body) banner.current?.focus();
   }, [notice]);
 
   function showNotice(message: string, tone?: BannerTone) {
@@ -57,7 +72,9 @@ export function SubscriptionCard() {
                   onRefresh={refresh}
                   onChangeFrequency={changeFrequency}
                   onChangeProducts={changeProducts}
+                  onApplyCoupon={applyCoupon}
                   onPause={pause}
+                  onCancel={cancel}
                   onNotice={showNotice}
                   onContactSupport={setSupportSubject}
                 />
@@ -67,11 +84,15 @@ export function SubscriptionCard() {
                   view={view}
                   onChangeFrequency={changeFrequency}
                   onChangeProducts={changeProducts}
+                  onApplyCoupon={applyCoupon}
                   onResume={resume}
+                  onCancel={cancel}
                   onNotice={showNotice}
                 />
               )}
-              {view.status === "cancelled" && <CancelledScreen view={view} />}
+              {view.status === "cancelled" && (
+                <CancelledScreen view={view} onReactivate={reactivate} onNotice={showNotice} />
+              )}
             </div>
           )}
         </div>
