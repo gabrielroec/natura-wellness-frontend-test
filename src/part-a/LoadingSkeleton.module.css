@@ -12,13 +12,38 @@
   gap: 16px;
 }
 
-.bar {
-  border-radius: 6px;
-  background: #efe9df;
+.body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.bar + .bar {
-  margin-top: 14px;
+.next {
+  height: 168px;
+}
+
+.shipment {
+  height: 273px;
+}
+
+.manage {
+  height: 213px;
+}
+
+.cancel {
+  height: 44px;
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar {
+  flex: none;
+  border-radius: 6px;
+  background: #efe9df;
 }
 
 .small {
@@ -34,6 +59,23 @@
 .large {
   width: 45%;
   height: 32px;
+}
+
+.wide {
+  width: 100%;
+  height: 14px;
+}
+
+.button {
+  width: 100%;
+  height: 56px;
+  border-radius: 12px;
+}
+
+.thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

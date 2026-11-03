@@ -20,6 +20,7 @@ export type SubscriptionView = {
   nextChargeAt: string | null;
   pausedUntil: string | null;
   cancelledAt: string | null;
+  discountPercent: number;
   subtotalCents: number;
   savingsCents: number;
   couponPercent: number | null;
@@ -45,6 +46,7 @@ export function buildView(server: Subscription, changes: LocalChanges = {}): Sub
     nextChargeAt: status === "active" ? (changes.nextChargeAt ?? server.nextChargeAt) : null,
     pausedUntil: status === "paused" ? (changes.pausedUntil ?? server.pausedUntil) : null,
     cancelledAt: status === "cancelled" ? (changes.cancelledAt ?? server.cancelledAt) : null,
+    discountPercent: server.discountPercent,
     subtotalCents,
     savingsCents: subtotalCents - totalCents,
     couponPercent: changes.couponPercent ?? null,

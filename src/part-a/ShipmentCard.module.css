@@ -1,0 +1,84 @@
+.title {
+  font: 600 16px/1.4 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.items {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.thumb {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border: 1px solid #e7e1d6;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f6f2;
+  font: 500 22px Fraunces, serif;
+  color: #17402f;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font: 500 15px/1.35 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.quantity {
+  margin-top: 2px;
+  font: 400 13px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.linePrice {
+  flex: none;
+  font: 500 15px/1.35 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.totals {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e7e1d6;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font: 400 14px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.line dd {
+  margin: 0;
+}
+
+.total {
+  margin-top: 4px;
+  font: 600 16px/1.4 Inter, sans-serif;
+  color: #1c2420;
+}

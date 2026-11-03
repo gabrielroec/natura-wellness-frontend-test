@@ -1,0 +1,41 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 0;
+  border: 0;
+  border-top: 1px solid #e7e1d6;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.row:hover .label {
+  color: #17402f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.row:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+
+.text {
+  display: grid;
+  gap: 2px;
+}
+
+.label {
+  font: 500 15px/1.4 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.detail {
+  font: 400 13px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}

@@ -10,8 +10,32 @@ export const copy = {
     title: "We couldn't find your subscription",
     body: "Contact customer support and we'll help you find it.",
   },
-  status: {
+  active: {
+    badge: "Active",
     nextCharge: "Next charge",
+    deliveredEvery: "delivered every",
+    days: "days",
+    skip: "Skip next shipment",
+  },
+  shipment: {
+    title: "In your next shipment",
+    quantity: "Qty",
+    subtotal: "Subtotal",
+    savings: "Subscriber savings",
+    total: "Total",
+  },
+  manage: {
+    title: "Manage",
+    frequency: "Change frequency",
+    every: "Every",
+    days: "days",
+    products: "Change products",
+    productCount: "products",
+    pause: "Pause subscription",
+    pauseDetail: "For 30, 60 or 90 days",
+    cancel: "Cancel subscription",
+  },
+  status: {
     pausedUntil: "Paused until",
     cancelledOn: "Cancelled on",
   },

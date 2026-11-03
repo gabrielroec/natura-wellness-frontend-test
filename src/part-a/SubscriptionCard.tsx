@@ -1,6 +1,6 @@
 import { Card } from "../components/Card";
-import { formatDate, formatRelativeDate } from "../utils/dates";
-import { formatPrice } from "../utils/formatPrice";
+import { formatDate } from "../utils/dates";
+import { ActiveScreen } from "./ActiveScreen";
 import { copy } from "./copy";
 import { LoadFailed } from "./LoadFailed";
 import { LoadingSkeleton } from "./LoadingSkeleton";
@@ -8,14 +8,13 @@ import styles from "./SubscriptionCard.module.css";
 import { buildView, type SubscriptionView } from "./subscriptionView";
 import { useSubscription } from "./useSubscription";
 
-function StatusSummary({ view }: { view: SubscriptionView }) {
-  if (view.pausedUntil) return <p>{`${copy.status.pausedUntil} ${formatDate(view.pausedUntil)}`}</p>;
-  if (view.cancelledAt) return <p>{`${copy.status.cancelledOn} ${formatDate(view.cancelledAt)}`}</p>;
-  if (!view.nextChargeAt) return null;
+function StatusScreen({ view }: { view: SubscriptionView }) {
+  if (view.status === "active") return <ActiveScreen view={view} />;
   return (
-    <p>
-      {`${copy.status.nextCharge}: ${formatDate(view.nextChargeAt)}, ${formatRelativeDate(view.nextChargeAt)}. ${formatPrice(view.nextChargeTotalCents)}`}
-    </p>
+    <Card>
+      {view.pausedUntil && <p>{`${copy.status.pausedUntil} ${formatDate(view.pausedUntil)}`}</p>}
+      {view.cancelledAt && <p>{`${copy.status.cancelledOn} ${formatDate(view.cancelledAt)}`}</p>}
+    </Card>
   );
 }
 
@@ -29,11 +28,7 @@ export function SubscriptionCard() {
         <div className={styles.body}>
           {state.phase === "loading" && <LoadingSkeleton />}
           {state.phase === "failed" && <LoadFailed errorStatus={state.errorStatus} onRetry={retry} />}
-          {state.phase === "ready" && (
-            <Card>
-              <StatusSummary view={buildView(state.server)} />
-            </Card>
-          )}
+          {state.phase === "ready" && <StatusScreen view={buildView(state.server)} />}
         </div>
       </div>
     </main>

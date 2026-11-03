@@ -19,6 +19,7 @@ const oneMultivitamin = active.items.map((item) => (item.sku === "NW-MULTI-30" ?
 describe("buildView totals", () => {
   it("uses the total from the API", () => {
     const view = buildView(active);
+    expect(view.discountPercent).toBe(15);
     expect(view.subtotalCents).toBe(11985);
     expect(view.savingsCents).toBe(1798);
     expect(view.nextChargeTotalCents).toBe(10187);

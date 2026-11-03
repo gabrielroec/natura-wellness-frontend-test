@@ -1,0 +1,66 @@
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.label {
+  font: 500 14px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.charge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: 8px;
+}
+
+.date {
+  font: 500 32px/1.2 Fraunces, serif;
+  letter-spacing: -0.01em;
+  color: #17402f;
+}
+
+.amount {
+  font: 600 24px/1.2 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.meta {
+  margin-top: 4px;
+  font: 400 14px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.meta::first-letter {
+  text-transform: uppercase;
+}
+
+.primary {
+  display: grid;
+  margin-top: 20px;
+}
+
+.manage {
+  font: 600 16px/1.4 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.rows {
+  margin-top: 12px;
+  margin-bottom: -8px;
+}
+
+.cancel {
+  display: flex;
+  justify-content: center;
+}
