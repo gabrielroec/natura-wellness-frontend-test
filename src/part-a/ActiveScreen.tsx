@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { SubscriptionItem } from "../api/types";
 import type { BannerTone } from "../components/Banner";
 import { Button } from "../components/Button";
 import { formatDate, formatRelativeDate } from "../utils/dates";
@@ -16,12 +17,22 @@ type ActiveScreenProps = {
   onSkip: () => Promise<void>;
   onRefresh: () => Promise<SubscriptionView>;
   onChangeFrequency: (days: number) => void;
+  onChangeProducts: (items: SubscriptionItem[]) => void;
   onPause: (days: number) => void;
   onNotice: (message: string, tone?: BannerTone) => void;
   onContactSupport: (subject: string) => void;
 };
 
-export function ActiveScreen({ view, onSkip, onRefresh, onChangeFrequency, onPause, onNotice, onContactSupport }: ActiveScreenProps) {
+export function ActiveScreen({
+  view,
+  onSkip,
+  onRefresh,
+  onChangeFrequency,
+  onChangeProducts,
+  onPause,
+  onNotice,
+  onContactSupport,
+}: ActiveScreenProps) {
   const [skipOpen, setSkipOpen] = useState(false);
   if (!view.nextChargeAt) return null;
   const date = formatDate(view.nextChargeAt);
@@ -58,7 +69,13 @@ export function ActiveScreen({ view, onSkip, onRefresh, onChangeFrequency, onPau
         )}
       </SummaryCard>
       <ShipmentCard view={view} title={copy.shipment.title} />
-      <ManageSection view={view} onChangeFrequency={onChangeFrequency} onPause={onPause} onNotice={onNotice} />
+      <ManageSection
+        view={view}
+        onChangeFrequency={onChangeFrequency}
+        onChangeProducts={onChangeProducts}
+        onPause={onPause}
+        onNotice={onNotice}
+      />
       {view.canSkip && (
         <SkipSheet
           view={view}

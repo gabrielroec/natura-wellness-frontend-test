@@ -1,8 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { fixtures } from "../api/fixtures";
+import { catalog, fixtures } from "../api/fixtures";
 import type { Subscription } from "../api/types";
 import { addDays } from "../utils/dates";
-import { applyPause, applyResume, applySimulatedSkip, applySkip, buildView, chargeDateAfterSkip } from "./subscriptionView";
+import {
+  applyPause,
+  applyResume,
+  applySimulatedSkip,
+  applySkip,
+  buildView,
+  chargeDateAfterSkip,
+  nextChargeWithItems,
+  swapCandidates,
+  swapItem,
+} from "./subscriptionView";
 
 const active = fixtures.active();
 
@@ -75,6 +85,43 @@ describe("buildView by status", () => {
     expect(paused.pausedUntil).toBe(pausedUntil);
     expect(paused.canSkip).toBe(false);
     expect(buildView(active).nextChargeAt).toBe(active.nextChargeAt);
+  });
+});
+
+describe("products", () => {
+  const [, multivitamin] = active.items;
+  const magnesium = catalog.find((product) => product.sku === "NW-MAG-90")!;
+  const bundle = catalog.find((product) => product.sku === "NW-ESSENTIALS")!;
+
+  it("offers only the products not in the subscription", () => {
+    expect(swapCandidates(catalog, active.items).map((product) => product.sku)).toEqual(["NW-MAG-90", "NW-ESSENTIALS"]);
+  });
+
+  it("swaps a product and keeps its quantity", () => {
+    const items = swapItem(active.items, multivitamin.sku, magnesium);
+    expect(items[1]).toEqual({ ...magnesium, quantity: 2 });
+    expect(items[0]).toEqual(active.items[0]);
+    expect(swapCandidates(catalog, items).map((product) => product.sku)).toEqual(["NW-MULTI-30", "NW-ESSENTIALS"]);
+  });
+
+  it("calculates the new total with the subscriber discount", () => {
+    const view = buildView(active);
+    expect(nextChargeWithItems(view, active.items)).toBe(10187);
+    expect(nextChargeWithItems(view, oneMultivitamin)).toBe(6367);
+    expect(nextChargeWithItems(view, swapItem(active.items, multivitamin.sku, magnesium))).toBe(6787);
+    expect(nextChargeWithItems(view, swapItem(oneMultivitamin, multivitamin.sku, bundle))).toBe(10192);
+  });
+
+  it("applies an active coupon to the new total", () => {
+    expect(nextChargeWithItems(buildView(active, { couponPercent: 10 }), oneMultivitamin)).toBe(5730);
+  });
+
+  it("matches the view after saving", () => {
+    const items = swapItem(active.items, multivitamin.sku, magnesium);
+    const view = buildView(active, { items });
+    expect(view.nextChargeTotalCents).toBe(nextChargeWithItems(buildView(active), items));
+    expect(view.subtotalCents).toBe(7985);
+    expect(view.savingsCents).toBe(1198);
   });
 });
 

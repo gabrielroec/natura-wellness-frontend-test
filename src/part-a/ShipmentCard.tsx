@@ -1,6 +1,7 @@
 import { Card } from "../components/Card";
 import { formatPrice } from "../utils/formatPrice";
 import { copy } from "./copy";
+import { ProductThumb } from "./ProductThumb";
 import styles from "./ShipmentCard.module.css";
 import type { SubscriptionView } from "./subscriptionView";
 
@@ -17,13 +18,7 @@ export function ShipmentCard({ view, title, muted = false }: ShipmentCardProps) 
       <ul className={muted ? `${styles.items} ${styles.muted}` : styles.items}>
         {view.items.map((item) => (
           <li key={item.sku} className={styles.item}>
-            {item.imageUrl ? (
-              <img className={styles.thumb} src={item.imageUrl} alt="" width={56} height={56} />
-            ) : (
-              <span className={`${styles.thumb} ${styles.placeholder}`} aria-hidden="true">
-                {item.name[0]}
-              </span>
-            )}
+            <ProductThumb name={item.name} imageUrl={item.imageUrl} muted={muted} />
             <div className={styles.info}>
               <p className={styles.name}>{item.name}</p>
               <p className={styles.quantity}>{`${copy.shipment.quantity} ${item.quantity}`}</p>

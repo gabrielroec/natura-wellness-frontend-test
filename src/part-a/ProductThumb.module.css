@@ -1,0 +1,26 @@
+.thumb {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border: 1px solid #e7e1d6;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f6f2;
+  font: 500 22px Fraunces, serif;
+  color: #17402f;
+}
+
+.muted {
+  filter: grayscale(1);
+}
+
+.muted.placeholder {
+  background: #f3f0ea;
+  color: #4a5550;
+}

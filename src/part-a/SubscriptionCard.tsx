@@ -11,7 +11,7 @@ import { SupportSheet } from "./SupportSheet";
 import { useSubscription } from "./useSubscription";
 
 export function SubscriptionCard() {
-  const { state, view, retry, skip, refresh, changeFrequency, pause, resume } = useSubscription();
+  const { state, view, retry, skip, refresh, changeFrequency, changeProducts, pause, resume } = useSubscription();
   const [notice, setNotice] = useState<{ message: string; tone?: BannerTone } | null>(null);
   const [supportSubject, setSupportSubject] = useState<string | null>(null);
   const banner = useRef<HTMLDivElement>(null);
@@ -56,13 +56,20 @@ export function SubscriptionCard() {
                   onSkip={skip}
                   onRefresh={refresh}
                   onChangeFrequency={changeFrequency}
+                  onChangeProducts={changeProducts}
                   onPause={pause}
                   onNotice={showNotice}
                   onContactSupport={setSupportSubject}
                 />
               )}
               {view.status === "paused" && (
-                <PausedScreen view={view} onChangeFrequency={changeFrequency} onResume={resume} onNotice={showNotice} />
+                <PausedScreen
+                  view={view}
+                  onChangeFrequency={changeFrequency}
+                  onChangeProducts={changeProducts}
+                  onResume={resume}
+                  onNotice={showNotice}
+                />
               )}
               {view.status === "cancelled" && <CancelledScreen view={view} />}
             </div>

@@ -1,5 +1,5 @@
 import { totalAfterDiscount } from "../api/fixtures";
-import type { Subscription, SubscriptionItem, SubscriptionStatus } from "../api/types";
+import type { CatalogProduct, Subscription, SubscriptionItem, SubscriptionStatus } from "../api/types";
 import { addDays } from "../utils/dates";
 
 export type LocalChanges = {
@@ -64,6 +64,19 @@ export function buildView(server: Subscription, changes: LocalChanges = {}, now 
     chargeDateOnResume: status === "paused" ? chargeDateOnResume(server, changes, now) : null,
     canSkip: status === "active" && !changes.skipUsed,
   };
+}
+
+export function nextChargeWithItems(view: SubscriptionView, items: SubscriptionItem[]) {
+  const totalCents = totalAfterDiscount(items, view.discountPercent);
+  return totalCents - Math.round((totalCents * (view.couponPercent ?? 0)) / 100);
+}
+
+export function swapItem(items: SubscriptionItem[], sku: string, product: CatalogProduct): SubscriptionItem[] {
+  return items.map((item) => (item.sku === sku ? { ...product, quantity: item.quantity } : item));
+}
+
+export function swapCandidates(catalog: CatalogProduct[], items: SubscriptionItem[]) {
+  return catalog.filter((product) => !items.some((item) => item.sku === product.sku));
 }
 
 export function applyPause(changes: LocalChanges, days: number, now = new Date()): LocalChanges {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSubscription } from "../api/mockApi";
-import { ApiError, type Subscription } from "../api/types";
+import { ApiError, type Subscription, type SubscriptionItem } from "../api/types";
 import { reloadSubscription, simulatedWait, skipShipment } from "./scenarioApi";
 import { applyPause, applyResume, applySimulatedSkip, applySkip, buildView, type LocalChanges } from "./subscriptionView";
 
@@ -56,6 +56,10 @@ export function useSubscription() {
     setChanges((current) => ({ ...current, intervalDays: days }));
   }
 
+  function changeProducts(items: SubscriptionItem[]) {
+    setChanges((current) => ({ ...current, items }));
+  }
+
   function pause(days: number) {
     setChanges((current) => applyPause(current, days));
   }
@@ -64,5 +68,15 @@ export function useSubscription() {
     if (state.phase === "ready") setChanges((current) => applyResume(state.server, current));
   }
 
-  return { state, view, retry: () => setAttempt((value) => value + 1), skip, refresh, changeFrequency, pause, resume };
+  return {
+    state,
+    view,
+    retry: () => setAttempt((value) => value + 1),
+    skip,
+    refresh,
+    changeFrequency,
+    changeProducts,
+    pause,
+    resume,
+  };
 }
