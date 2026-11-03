@@ -1,0 +1,14 @@
+.title {
+  font: 600 16px/1.4 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.rows {
+  margin-top: 12px;
+  margin-bottom: -8px;
+}
+
+.cancel {
+  display: flex;
+  justify-content: center;
+}

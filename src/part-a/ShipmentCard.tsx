@@ -6,13 +6,15 @@ import type { SubscriptionView } from "./subscriptionView";
 
 type ShipmentCardProps = {
   view: SubscriptionView;
+  title: string;
+  muted?: boolean;
 };
 
-export function ShipmentCard({ view }: ShipmentCardProps) {
+export function ShipmentCard({ view, title, muted = false }: ShipmentCardProps) {
   return (
     <Card>
-      <h2 className={styles.title}>{copy.shipment.title}</h2>
-      <ul className={styles.items}>
+      <h2 className={styles.title}>{title}</h2>
+      <ul className={muted ? `${styles.items} ${styles.muted}` : styles.items}>
         {view.items.map((item) => (
           <li key={item.sku} className={styles.item}>
             {item.imageUrl ? (
@@ -26,24 +28,26 @@ export function ShipmentCard({ view }: ShipmentCardProps) {
               <p className={styles.name}>{item.name}</p>
               <p className={styles.quantity}>{`${copy.shipment.quantity} ${item.quantity}`}</p>
             </div>
-            <p className={styles.linePrice}>{formatPrice(item.unitPriceCents * item.quantity)}</p>
+            {!muted && <p className={styles.linePrice}>{formatPrice(item.unitPriceCents * item.quantity)}</p>}
           </li>
         ))}
       </ul>
-      <dl className={styles.totals}>
-        <div className={styles.line}>
-          <dt>{copy.shipment.subtotal}</dt>
-          <dd>{formatPrice(view.subtotalCents)}</dd>
-        </div>
-        <div className={styles.line}>
-          <dt>{`${copy.shipment.savings} (${view.discountPercent}%)`}</dt>
-          <dd>{`−${formatPrice(view.savingsCents)}`}</dd>
-        </div>
-        <div className={`${styles.line} ${styles.total}`}>
-          <dt>{copy.shipment.total}</dt>
-          <dd>{formatPrice(view.nextChargeTotalCents)}</dd>
-        </div>
-      </dl>
+      {!muted && (
+        <dl className={styles.totals}>
+          <div className={styles.line}>
+            <dt>{copy.shipment.subtotal}</dt>
+            <dd>{formatPrice(view.subtotalCents)}</dd>
+          </div>
+          <div className={styles.line}>
+            <dt>{`${copy.shipment.savings} (${view.discountPercent}%)`}</dt>
+            <dd>{`−${formatPrice(view.savingsCents)}`}</dd>
+          </div>
+          <div className={`${styles.line} ${styles.total}`}>
+            <dt>{copy.shipment.total}</dt>
+            <dd>{formatPrice(view.nextChargeTotalCents)}</dd>
+          </div>
+        </dl>
+      )}
     </Card>
   );
 }

@@ -1,8 +1,10 @@
 import styles from "./Badge.module.css";
 
+export type BadgeTone = "gold" | "green" | "neutral";
+
 type BadgeProps = {
   label: string;
-  tone?: "gold" | "green";
+  tone?: BadgeTone;
 };
 
 export function Badge({ label, tone = "gold" }: BadgeProps) {

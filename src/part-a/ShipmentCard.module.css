@@ -35,6 +35,19 @@
   color: #17402f;
 }
 
+.muted .thumb {
+  filter: grayscale(1);
+}
+
+.muted .placeholder {
+  background: #f3f0ea;
+  color: #4a5550;
+}
+
+.muted .name {
+  color: #4a5550;
+}
+
 .info {
   flex: 1;
   min-width: 0;

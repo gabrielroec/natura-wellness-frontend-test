@@ -21,6 +21,11 @@
   margin-top: 24px;
 }
 
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
 @media (max-width: 480px) {
   .page {
     padding: 24px 16px 40px;

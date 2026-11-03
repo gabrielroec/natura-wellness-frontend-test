@@ -35,9 +35,21 @@ export const copy = {
     pauseDetail: "For 30, 60 or 90 days",
     cancel: "Cancel subscription",
   },
-  status: {
-    pausedUntil: "Paused until",
-    cancelledOn: "Cancelled on",
+  paused: {
+    badge: "Paused",
+    label: "Paused until",
+    noCharges: "no charges until then",
+    charged: "You'll be charged",
+    whenResumes: "when it resumes.",
+    resume: "Resume now",
+    shipmentTitle: "When your subscription resumes",
+  },
+  cancelled: {
+    badge: "Cancelled",
+    label: "Cancelled on",
+    noCharges: "you won't be charged again",
+    reactivate: "Reactivate subscription",
+    itemsTitle: "What was in your subscription",
   },
   cancelReasons: [
     { id: "tooMuchProduct", label: "I have too much product left" },
