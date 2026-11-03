@@ -15,9 +15,13 @@ const changedTo = params.get("changedTo");
 const SIMULATED_WAIT_MS = 800;
 const PAUSE_DAYS = 30;
 
+export function simulatedWait() {
+  return new Promise((resolve) => setTimeout(resolve, SIMULATED_WAIT_MS));
+}
+
 export async function skipShipment(request: Parameters<typeof skipNextShipment>[0]) {
   if (!skipError) return skipNextShipment(request);
-  await new Promise((resolve) => setTimeout(resolve, SIMULATED_WAIT_MS));
+  await simulatedWait();
   throw new ApiError(skipError, "Simulated failure");
 }
 

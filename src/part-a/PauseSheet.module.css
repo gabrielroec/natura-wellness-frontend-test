@@ -1,0 +1,18 @@
+.options {
+  margin-top: 16px;
+}
+
+.preview {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f3f6f2;
+  font: 500 14px/1.45 Inter, sans-serif;
+  color: #17402f;
+}
+
+.actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}

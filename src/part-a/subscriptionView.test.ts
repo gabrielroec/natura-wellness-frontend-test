@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fixtures } from "../api/fixtures";
 import type { Subscription } from "../api/types";
 import { addDays } from "../utils/dates";
-import { applySkip, buildView, chargeDateAfterSkip } from "./subscriptionView";
+import { applyPause, applyResume, applySimulatedSkip, applySkip, buildView, chargeDateAfterSkip } from "./subscriptionView";
 
 const active = fixtures.active();
 
@@ -75,6 +75,76 @@ describe("buildView by status", () => {
     expect(paused.pausedUntil).toBe(pausedUntil);
     expect(paused.canSkip).toBe(false);
     expect(buildView(active).nextChargeAt).toBe(active.nextChargeAt);
+  });
+});
+
+describe("pause and resume", () => {
+  const now = new Date("2026-11-03T12:00:00.000Z");
+
+  it("pauses for the chosen days from today", () => {
+    const view = buildView(active, applyPause({}, 60, now), now);
+    expect(view.status).toBe("paused");
+    expect(view.pausedUntil).toBe(addDays(now.toISOString(), 60));
+    expect(view.nextChargeAt).toBeNull();
+    expect(view.canSkip).toBe(false);
+  });
+
+  it("keeps the original charge date when it is still in the future", () => {
+    const paused = applyPause({}, 30, now);
+    const future = addDays(now.toISOString(), 6);
+    const server = { ...active, nextChargeAt: future };
+    expect(buildView(server, paused, now).chargeDateOnResume).toBe(future);
+    const view = buildView(server, applyResume(server, paused, now), now);
+    expect(view.status).toBe("active");
+    expect(view.nextChargeAt).toBe(future);
+    expect(view.pausedUntil).toBeNull();
+    expect(view.canSkip).toBe(true);
+  });
+
+  it("uses today plus the interval when the original date has passed", () => {
+    const past = addDays(now.toISOString(), -2);
+    const server = { ...active, nextChargeAt: past };
+    const paused = applyPause({}, 30, now);
+    expect(buildView(server, paused, now).chargeDateOnResume).toBe(addDays(now.toISOString(), 30));
+    expect(buildView(server, { ...paused, intervalDays: 60 }, now).chargeDateOnResume).toBe(addDays(now.toISOString(), 60));
+  });
+
+  it("resumes a subscription the API reports as paused", () => {
+    const server = fixtures.paused();
+    expect(buildView(server, {}, now).chargeDateOnResume).toBe(addDays(now.toISOString(), 30));
+    const view = buildView(server, applyResume(server, {}, now), now);
+    expect(view.status).toBe("active");
+    expect(view.nextChargeAt).toBe(addDays(now.toISOString(), 30));
+    expect(view.nextChargeTotalCents).toBe(10187);
+    expect(view.canSkip).toBe(true);
+  });
+
+  it("follows the API status again after resuming an active subscription", () => {
+    const server = { ...active, nextChargeAt: addDays(now.toISOString(), 6) };
+    const changes = applyResume(server, applyPause({}, 30, now), now);
+    expect(changes.status).toBeUndefined();
+    expect(buildView({ ...server, status: "cancelled" }, changes, now).status).toBe("cancelled");
+  });
+
+  it("still allows only one skip after pausing and resuming", () => {
+    const server = { ...active, nextChargeAt: addDays(now.toISOString(), 6) };
+    const skipped = applySimulatedSkip({}, buildView(server, {}, now));
+    const resumed = applyResume(server, applyPause(skipped, 30, now), now);
+    const view = buildView(server, resumed, now);
+    expect(view.canSkip).toBe(false);
+    expect(view.nextChargeAt).toBe(addDays(now.toISOString(), 36));
+  });
+});
+
+describe("applySimulatedSkip", () => {
+  it("moves the date by the current interval without the API", () => {
+    const now = new Date("2026-11-03T12:00:00.000Z");
+    const server = fixtures.paused();
+    const resumed = applyResume(server, { intervalDays: 60 }, now);
+    const before = buildView(server, resumed, now);
+    const view = buildView(server, applySimulatedSkip(resumed, before), now);
+    expect(view.nextChargeAt).toBe(addDays(now.toISOString(), 120));
+    expect(view.canSkip).toBe(false);
   });
 });
 

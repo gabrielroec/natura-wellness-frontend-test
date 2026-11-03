@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getSubscription } from "../api/mockApi";
 import { ApiError, type Subscription } from "../api/types";
-import { reloadSubscription, skipShipment } from "./scenarioApi";
-import { applySkip, buildView, type LocalChanges } from "./subscriptionView";
+import { reloadSubscription, simulatedWait, skipShipment } from "./scenarioApi";
+import { applyPause, applyResume, applySimulatedSkip, applySkip, buildView, type LocalChanges } from "./subscriptionView";
 
 export type LoadState =
   | { phase: "loading" }
@@ -33,6 +33,11 @@ export function useSubscription() {
 
   async function skip() {
     if (state.phase !== "ready" || !view) return;
+    if (state.server.status !== "active") {
+      await simulatedWait();
+      setChanges((current) => applySimulatedSkip(current, view));
+      return;
+    }
     const after = await skipShipment({
       subscriptionId: state.server.id,
       expectedUpdatedAt: state.server.updatedAt,
@@ -51,5 +56,13 @@ export function useSubscription() {
     setChanges((current) => ({ ...current, intervalDays: days }));
   }
 
-  return { state, view, retry: () => setAttempt((value) => value + 1), skip, refresh, changeFrequency };
+  function pause(days: number) {
+    setChanges((current) => applyPause(current, days));
+  }
+
+  function resume() {
+    if (state.phase === "ready") setChanges((current) => applyResume(state.server, current));
+  }
+
+  return { state, view, retry: () => setAttempt((value) => value + 1), skip, refresh, changeFrequency, pause, resume };
 }
