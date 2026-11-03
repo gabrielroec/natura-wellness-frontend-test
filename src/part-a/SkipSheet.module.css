@@ -1,0 +1,68 @@
+.dates {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f3f6f2;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font: 400 15px/1.4 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.row dd {
+  margin: 0;
+  color: #1c2420;
+}
+
+.row dd.strong {
+  font-weight: 600;
+  color: #17402f;
+}
+
+.explain {
+  margin-top: 12px;
+  font: 400 14px/1.5 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.error {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e9c6bd;
+  border-radius: 10px;
+  background: #fbefec;
+  font: 500 14px/1.4 Inter, sans-serif;
+  color: #8a2f1c;
+}
+
+.actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation: spin 800ms linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

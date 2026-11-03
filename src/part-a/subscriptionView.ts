@@ -56,8 +56,12 @@ export function buildView(server: Subscription, changes: LocalChanges = {}): Sub
   };
 }
 
+export function chargeDateAfterSkip(view: SubscriptionView) {
+  return view.nextChargeAt ? addDays(view.nextChargeAt, view.intervalDays) : undefined;
+}
+
 export function applySkip(changes: LocalChanges, before: SubscriptionView, after: Subscription): LocalChanges {
-  const nextChargeAt = before.nextChargeAt ? addDays(before.nextChargeAt, before.intervalDays) : undefined;
+  const nextChargeAt = chargeDateAfterSkip(before);
   return {
     ...changes,
     skipUsed: true,

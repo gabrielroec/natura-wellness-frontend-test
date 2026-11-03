@@ -18,7 +18,7 @@ function ProductRow() {
 export function LoadingSkeleton() {
   return (
     <div role="status">
-      <span className={styles.srOnly}>{copy.loading}</span>
+      <span className="sr-only">{copy.loading}</span>
       <div className={styles.stack} aria-hidden="true">
         <Card>
           <div className={`${styles.body} ${styles.next}`}>

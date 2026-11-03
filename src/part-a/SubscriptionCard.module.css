@@ -26,6 +26,10 @@
   gap: 16px;
 }
 
+.stack > [aria-live]:empty {
+  display: none;
+}
+
 @media (max-width: 480px) {
   .page {
     padding: 24px 16px 40px;

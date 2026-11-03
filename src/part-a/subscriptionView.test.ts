@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fixtures } from "../api/fixtures";
 import type { Subscription } from "../api/types";
 import { addDays } from "../utils/dates";
-import { applySkip, buildView } from "./subscriptionView";
+import { applySkip, buildView, chargeDateAfterSkip } from "./subscriptionView";
 
 const active = fixtures.active();
 
@@ -75,6 +75,17 @@ describe("buildView by status", () => {
     expect(paused.pausedUntil).toBe(pausedUntil);
     expect(paused.canSkip).toBe(false);
     expect(buildView(active).nextChargeAt).toBe(active.nextChargeAt);
+  });
+});
+
+describe("chargeDateAfterSkip", () => {
+  it("adds the current interval", () => {
+    expect(chargeDateAfterSkip(buildView(active))).toBe(addDays(active.nextChargeAt!, 30));
+    expect(chargeDateAfterSkip(buildView(active, { intervalDays: 90 }))).toBe(addDays(active.nextChargeAt!, 90));
+  });
+
+  it("has no date to offer when there is no next charge", () => {
+    expect(chargeDateAfterSkip(buildView(fixtures.paused()))).toBeUndefined();
   });
 });
 

@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+import { Banner } from "../components/Banner";
 import { ActiveScreen } from "./ActiveScreen";
 import { CancelledScreen } from "./CancelledScreen";
 import { copy } from "./copy";
@@ -5,15 +7,16 @@ import { LoadFailed } from "./LoadFailed";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 import { PausedScreen } from "./PausedScreen";
 import styles from "./SubscriptionCard.module.css";
-import { buildView } from "./subscriptionView";
 import { useSubscription } from "./useSubscription";
 
-const screens = { active: ActiveScreen, paused: PausedScreen, cancelled: CancelledScreen };
-
 export function SubscriptionCard() {
-  const { state, retry } = useSubscription();
-  const view = state.phase === "ready" ? buildView(state.server) : null;
-  const Screen = view ? screens[view.status] : null;
+  const { state, view, retry, skip } = useSubscription();
+  const [notice, setNotice] = useState<string | null>(null);
+  const banner = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (notice && document.activeElement === document.body) banner.current?.focus();
+  }, [notice]);
 
   return (
     <main className={styles.page}>
@@ -22,9 +25,16 @@ export function SubscriptionCard() {
         <div className={styles.body}>
           {state.phase === "loading" && <LoadingSkeleton />}
           {state.phase === "failed" && <LoadFailed errorStatus={state.errorStatus} onRetry={retry} />}
-          {view && Screen && (
+          {view && (
             <div className={styles.stack}>
-              <Screen view={view} />
+              <div aria-live="polite">
+                {notice && (
+                  <Banner ref={banner} message={notice} dismissLabel={copy.skip.dismiss} onDismiss={() => setNotice(null)} />
+                )}
+              </div>
+              {view.status === "active" && <ActiveScreen view={view} onSkip={skip} onNotice={setNotice} />}
+              {view.status === "paused" && <PausedScreen view={view} />}
+              {view.status === "cancelled" && <CancelledScreen view={view} />}
             </div>
           )}
         </div>

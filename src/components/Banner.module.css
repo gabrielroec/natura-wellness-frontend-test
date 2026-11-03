@@ -1,0 +1,40 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid #c5dccb;
+  border-radius: 12px;
+  background: #e3efe6;
+  outline: none;
+}
+
+.banner > svg {
+  flex: none;
+}
+
+.message {
+  flex: 1;
+  min-width: 0;
+  font: 500 14px/1.4 Inter, sans-serif;
+  color: #17402f;
+}
+
+.dismiss {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+
+.dismiss:focus-visible {
+  outline: 2px solid #17402f;
+  outline-offset: -2px;
+}

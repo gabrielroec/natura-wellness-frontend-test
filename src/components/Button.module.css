@@ -12,6 +12,10 @@
   outline-offset: 2px;
 }
 
+.button[aria-disabled="true"] {
+  cursor: default;
+}
+
 .primary {
   height: 56px;
   padding: 0 16px;
@@ -23,6 +27,30 @@
 
 .primary:hover {
   background: #123325;
+}
+
+.primary[aria-disabled="true"]:hover {
+  background: #17402f;
+}
+
+.secondary {
+  height: 56px;
+  padding: 0 16px;
+  border: 1px solid #cfd6d0;
+  border-radius: 12px;
+  background: #ffffff;
+  font: 600 16px Inter, sans-serif;
+  color: #17402f;
+}
+
+.secondary:hover {
+  background: #f3f6f2;
+}
+
+.secondary[aria-disabled="true"] {
+  border-color: #e7e1d6;
+  background: #ffffff;
+  color: #6b7a70;
 }
 
 .quiet {
