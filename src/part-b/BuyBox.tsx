@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button } from "../components/Button";
+import { QuantityStepper } from "../components/QuantityStepper";
 import { Select } from "../components/Select";
 import { formatPrice } from "../utils/formatPrice";
 import styles from "./BuyBox.module.css";
 import { copy } from "./copy";
 import { PurchaseOption } from "./PurchaseOption";
-import { QuantityStepper } from "./QuantityStepper";
 
 function Star() {
   return (
