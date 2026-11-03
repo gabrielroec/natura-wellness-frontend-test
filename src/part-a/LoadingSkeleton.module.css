@@ -1,0 +1,49 @@
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.bar {
+  border-radius: 6px;
+  background: #efe9df;
+}
+
+.bar + .bar {
+  margin-top: 14px;
+}
+
+.small {
+  width: 30%;
+  height: 14px;
+}
+
+.medium {
+  width: 65%;
+  height: 18px;
+}
+
+.large {
+  width: 45%;
+  height: 32px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bar {
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,36 @@
+.page {
+  flex: 1;
+  padding: 48px 24px 64px;
+  background: #fbf8f3;
+  font: 400 15px/1.5 Inter, sans-serif;
+  color: #1c2420;
+}
+
+.content {
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+.title {
+  font: 500 32px/1.2 Fraunces, serif;
+  letter-spacing: -0.01em;
+  color: #17402f;
+}
+
+.body {
+  margin-top: 24px;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 24px 16px 40px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .body {
+    margin-top: 20px;
+  }
+}

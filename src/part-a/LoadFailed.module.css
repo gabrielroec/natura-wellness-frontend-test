@@ -1,0 +1,23 @@
+.title {
+  font: 600 18px/1.3 Inter, sans-serif;
+  color: #1c2420;
+  outline: none;
+}
+
+.body {
+  margin-top: 8px;
+  font: 400 15px/1.5 Inter, sans-serif;
+  color: #4a5550;
+}
+
+.action {
+  display: grid;
+  justify-content: start;
+  margin-top: 20px;
+}
+
+@media (max-width: 480px) {
+  .action {
+    justify-content: stretch;
+  }
+}
