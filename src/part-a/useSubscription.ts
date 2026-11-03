@@ -47,5 +47,9 @@ export function useSubscription() {
     return buildView(server, changes);
   }
 
-  return { state, view, retry: () => setAttempt((value) => value + 1), skip, refresh };
+  function changeFrequency(days: number) {
+    setChanges((current) => ({ ...current, intervalDays: days }));
+  }
+
+  return { state, view, retry: () => setAttempt((value) => value + 1), skip, refresh, changeFrequency };
 }

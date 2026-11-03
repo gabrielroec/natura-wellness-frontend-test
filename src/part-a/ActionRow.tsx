@@ -3,11 +3,12 @@ import styles from "./ActionRow.module.css";
 type ActionRowProps = {
   label: string;
   detail: string;
+  onClick?: () => void;
 };
 
-export function ActionRow({ label, detail }: ActionRowProps) {
+export function ActionRow({ label, detail, onClick }: ActionRowProps) {
   return (
-    <button className={styles.row} type="button">
+    <button className={styles.row} type="button" onClick={onClick}>
       <span className={styles.text}>
         <span className={styles.label}>{label}</span>
         <span className={styles.detail}>{detail}</span>

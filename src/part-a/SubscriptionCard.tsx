@@ -11,7 +11,7 @@ import { SupportSheet } from "./SupportSheet";
 import { useSubscription } from "./useSubscription";
 
 export function SubscriptionCard() {
-  const { state, view, retry, skip, refresh } = useSubscription();
+  const { state, view, retry, skip, refresh, changeFrequency } = useSubscription();
   const [notice, setNotice] = useState<{ message: string; tone?: BannerTone } | null>(null);
   const [supportSubject, setSupportSubject] = useState<string | null>(null);
   const banner = useRef<HTMLDivElement>(null);
@@ -19,6 +19,10 @@ export function SubscriptionCard() {
   useEffect(() => {
     if (notice && document.activeElement === document.body) banner.current?.focus();
   }, [notice]);
+
+  function showNotice(message: string, tone?: BannerTone) {
+    setNotice({ message, tone });
+  }
 
   return (
     <main className={styles.page}>
@@ -51,11 +55,14 @@ export function SubscriptionCard() {
                   view={view}
                   onSkip={skip}
                   onRefresh={refresh}
-                  onNotice={(message, tone) => setNotice({ message, tone })}
+                  onChangeFrequency={changeFrequency}
+                  onNotice={showNotice}
                   onContactSupport={setSupportSubject}
                 />
               )}
-              {view.status === "paused" && <PausedScreen view={view} />}
+              {view.status === "paused" && (
+                <PausedScreen view={view} onChangeFrequency={changeFrequency} onNotice={showNotice} />
+              )}
               {view.status === "cancelled" && <CancelledScreen view={view} />}
             </div>
           )}

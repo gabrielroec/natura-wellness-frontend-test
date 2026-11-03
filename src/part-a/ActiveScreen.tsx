@@ -15,11 +15,12 @@ type ActiveScreenProps = {
   view: SubscriptionView;
   onSkip: () => Promise<void>;
   onRefresh: () => Promise<SubscriptionView>;
+  onChangeFrequency: (days: number) => void;
   onNotice: (message: string, tone?: BannerTone) => void;
   onContactSupport: (subject: string) => void;
 };
 
-export function ActiveScreen({ view, onSkip, onRefresh, onNotice, onContactSupport }: ActiveScreenProps) {
+export function ActiveScreen({ view, onSkip, onRefresh, onChangeFrequency, onNotice, onContactSupport }: ActiveScreenProps) {
   const [skipOpen, setSkipOpen] = useState(false);
   if (!view.nextChargeAt) return null;
   const date = formatDate(view.nextChargeAt);
@@ -56,7 +57,7 @@ export function ActiveScreen({ view, onSkip, onRefresh, onNotice, onContactSuppo
         )}
       </SummaryCard>
       <ShipmentCard view={view} title={copy.shipment.title} />
-      <ManageSection view={view} showPause />
+      <ManageSection view={view} showPause onChangeFrequency={onChangeFrequency} onNotice={onNotice} />
       {view.canSkip && (
         <SkipSheet
           view={view}

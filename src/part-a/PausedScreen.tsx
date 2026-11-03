@@ -9,9 +9,11 @@ import { SummaryCard } from "./SummaryCard";
 
 type PausedScreenProps = {
   view: SubscriptionView;
+  onChangeFrequency: (days: number) => void;
+  onNotice: (message: string) => void;
 };
 
-export function PausedScreen({ view }: PausedScreenProps) {
+export function PausedScreen({ view, onChangeFrequency, onNotice }: PausedScreenProps) {
   if (!view.pausedUntil) return null;
 
   return (
@@ -28,7 +30,7 @@ export function PausedScreen({ view }: PausedScreenProps) {
         <Button>{copy.paused.resume}</Button>
       </SummaryCard>
       <ShipmentCard view={view} title={copy.paused.shipmentTitle} />
-      <ManageSection view={view} />
+      <ManageSection view={view} onChangeFrequency={onChangeFrequency} onNotice={onNotice} />
     </>
   );
 }
