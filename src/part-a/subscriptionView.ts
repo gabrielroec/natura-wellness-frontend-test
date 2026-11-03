@@ -14,6 +14,7 @@ export type LocalChanges = {
 };
 
 export type SubscriptionView = {
+  id: string;
   status: SubscriptionStatus;
   items: SubscriptionItem[];
   intervalDays: number;
@@ -40,6 +41,7 @@ export function buildView(server: Subscription, changes: LocalChanges = {}): Sub
   const couponSavingsCents = Math.round((totalCents * (changes.couponPercent ?? 0)) / 100);
 
   return {
+    id: server.id,
     status,
     items,
     intervalDays: changes.intervalDays ?? server.intervalDays,

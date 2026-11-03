@@ -28,6 +28,10 @@ export function Sheet({ open, title, onClose, locked = false, children }: SheetP
     if (!open && element.open) element.close();
   }, [open]);
 
+  useEffect(() => {
+    if (dialog.current?.open) heading.current?.focus();
+  }, [title]);
+
   function requestClose() {
     if (!locked) onClose();
   }

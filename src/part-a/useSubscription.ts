@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getSubscription, skipNextShipment } from "../api/mockApi";
+import { getSubscription } from "../api/mockApi";
 import { ApiError, type Subscription } from "../api/types";
+import { reloadSubscription, skipShipment } from "./scenarioApi";
 import { applySkip, buildView, type LocalChanges } from "./subscriptionView";
 
 export type LoadState =
@@ -32,7 +33,7 @@ export function useSubscription() {
 
   async function skip() {
     if (state.phase !== "ready" || !view) return;
-    const after = await skipNextShipment({
+    const after = await skipShipment({
       subscriptionId: state.server.id,
       expectedUpdatedAt: state.server.updatedAt,
     });
@@ -40,5 +41,11 @@ export function useSubscription() {
     setState({ phase: "ready", server: after });
   }
 
-  return { state, view, retry: () => setAttempt((value) => value + 1), skip };
+  async function refresh() {
+    const server = await reloadSubscription();
+    setState({ phase: "ready", server });
+    return buildView(server, changes);
+  }
+
+  return { state, view, retry: () => setAttempt((value) => value + 1), skip, refresh };
 }

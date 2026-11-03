@@ -7,9 +7,10 @@ import styles from "./LoadFailed.module.css";
 type LoadFailedProps = {
   errorStatus: number | null;
   onRetry: () => void;
+  onContactSupport: () => void;
 };
 
-export function LoadFailed({ errorStatus, onRetry }: LoadFailedProps) {
+export function LoadFailed({ errorStatus, onRetry, onContactSupport }: LoadFailedProps) {
   const heading = useRef<HTMLHeadingElement>(null);
   const notFound = errorStatus === 404;
   const text = notFound ? copy.notFound : copy.loadFailed;
@@ -25,11 +26,12 @@ export function LoadFailed({ errorStatus, onRetry }: LoadFailedProps) {
           {text.title}
         </h2>
         <p className={styles.body}>{text.body}</p>
-        {!notFound && (
-          <div className={styles.action}>
-            <Button onClick={onRetry}>{copy.loadFailed.retry}</Button>
-          </div>
-        )}
+        <div className={styles.actions}>
+          {!notFound && <Button onClick={onRetry}>{copy.loadFailed.retry}</Button>}
+          <Button variant={notFound ? "primary" : "secondary"} onClick={onContactSupport}>
+            {copy.skip.contact}
+          </Button>
+        </div>
       </Card>
     </div>
   );

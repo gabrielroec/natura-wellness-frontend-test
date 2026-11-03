@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Banner } from "../components/Banner";
+import { Banner, type BannerTone } from "../components/Banner";
 import { ActiveScreen } from "./ActiveScreen";
 import { CancelledScreen } from "./CancelledScreen";
 import { copy } from "./copy";
@@ -7,11 +7,13 @@ import { LoadFailed } from "./LoadFailed";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 import { PausedScreen } from "./PausedScreen";
 import styles from "./SubscriptionCard.module.css";
+import { SupportSheet } from "./SupportSheet";
 import { useSubscription } from "./useSubscription";
 
 export function SubscriptionCard() {
-  const { state, view, retry, skip } = useSubscription();
-  const [notice, setNotice] = useState<string | null>(null);
+  const { state, view, retry, skip, refresh } = useSubscription();
+  const [notice, setNotice] = useState<{ message: string; tone?: BannerTone } | null>(null);
+  const [supportSubject, setSupportSubject] = useState<string | null>(null);
   const banner = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,21 +26,47 @@ export function SubscriptionCard() {
         <h1 className={styles.title}>{copy.title}</h1>
         <div className={styles.body}>
           {state.phase === "loading" && <LoadingSkeleton />}
-          {state.phase === "failed" && <LoadFailed errorStatus={state.errorStatus} onRetry={retry} />}
+          {state.phase === "failed" && (
+            <LoadFailed
+              errorStatus={state.errorStatus}
+              onRetry={retry}
+              onContactSupport={() => setSupportSubject(copy.support.subjects.load)}
+            />
+          )}
           {view && (
             <div className={styles.stack}>
               <div aria-live="polite">
                 {notice && (
-                  <Banner ref={banner} message={notice} dismissLabel={copy.skip.dismiss} onDismiss={() => setNotice(null)} />
+                  <Banner
+                    ref={banner}
+                    message={notice.message}
+                    tone={notice.tone}
+                    dismissLabel={copy.skip.dismiss}
+                    onDismiss={() => setNotice(null)}
+                  />
                 )}
               </div>
-              {view.status === "active" && <ActiveScreen view={view} onSkip={skip} onNotice={setNotice} />}
+              {view.status === "active" && (
+                <ActiveScreen
+                  view={view}
+                  onSkip={skip}
+                  onRefresh={refresh}
+                  onNotice={(message, tone) => setNotice({ message, tone })}
+                  onContactSupport={setSupportSubject}
+                />
+              )}
               {view.status === "paused" && <PausedScreen view={view} />}
               {view.status === "cancelled" && <CancelledScreen view={view} />}
             </div>
           )}
         </div>
       </div>
+      <SupportSheet
+        open={supportSubject !== null}
+        subject={supportSubject ?? ""}
+        reference={view?.id ?? null}
+        onClose={() => setSupportSubject(null)}
+      />
     </main>
   );
 }

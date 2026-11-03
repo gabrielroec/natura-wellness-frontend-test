@@ -3,9 +3,9 @@
   align-items: center;
   gap: 10px;
   padding: 6px 6px 6px 14px;
-  border: 1px solid #c5dccb;
+  border-width: 1px;
+  border-style: solid;
   border-radius: 12px;
-  background: #e3efe6;
   outline: none;
 }
 
@@ -13,11 +13,22 @@
   flex: none;
 }
 
+.success {
+  border-color: #c5dccb;
+  background: #e3efe6;
+  color: #17402f;
+}
+
+.info {
+  border-color: #eedfb8;
+  background: #fdf7e8;
+  color: #6b4e0f;
+}
+
 .message {
   flex: 1;
   min-width: 0;
   font: 500 14px/1.4 Inter, sans-serif;
-  color: #17402f;
 }
 
 .dismiss {
@@ -31,10 +42,11 @@
   border: 0;
   border-radius: 8px;
   background: none;
+  color: inherit;
   cursor: pointer;
 }
 
 .dismiss:focus-visible {
-  outline: 2px solid #17402f;
+  outline: 2px solid currentColor;
   outline-offset: -2px;
 }

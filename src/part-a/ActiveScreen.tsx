@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { BannerTone } from "../components/Banner";
 import { Button } from "../components/Button";
 import { formatDate, formatRelativeDate } from "../utils/dates";
 import { formatPrice } from "../utils/formatPrice";
@@ -13,10 +14,12 @@ import { SummaryCard } from "./SummaryCard";
 type ActiveScreenProps = {
   view: SubscriptionView;
   onSkip: () => Promise<void>;
-  onNotice: (message: string) => void;
+  onRefresh: () => Promise<SubscriptionView>;
+  onNotice: (message: string, tone?: BannerTone) => void;
+  onContactSupport: (subject: string) => void;
 };
 
-export function ActiveScreen({ view, onSkip, onNotice }: ActiveScreenProps) {
+export function ActiveScreen({ view, onSkip, onRefresh, onNotice, onContactSupport }: ActiveScreenProps) {
   const [skipOpen, setSkipOpen] = useState(false);
   if (!view.nextChargeAt) return null;
   const date = formatDate(view.nextChargeAt);
@@ -25,6 +28,10 @@ export function ActiveScreen({ view, onSkip, onNotice }: ActiveScreenProps) {
     await onSkip();
     setSkipOpen(false);
     onNotice(`${copy.skip.done} ${date}.`);
+  }
+
+  function handleNoLongerActive(status: SubscriptionView["status"]) {
+    onNotice(status === "paused" ? copy.skip.pausedElsewhere : copy.skip.cancelledElsewhere, "info");
   }
 
   return (
@@ -40,12 +47,27 @@ export function ActiveScreen({ view, onSkip, onNotice }: ActiveScreenProps) {
         {view.canSkip ? (
           <Button onClick={() => setSkipOpen(true)}>{copy.active.skip}</Button>
         ) : (
-          <p className={styles.skipped}>{`${copy.skip.skippedNote} ${date}.`}</p>
+          <>
+            <p className={styles.skipped}>{`${copy.skip.skippedNote} ${date}.`}</p>
+            <Button variant="quiet" onClick={() => onContactSupport(copy.support.subjects.undoSkip)}>
+              {copy.skip.regret}
+            </Button>
+          </>
         )}
       </SummaryCard>
       <ShipmentCard view={view} title={copy.shipment.title} />
       <ManageSection view={view} showPause />
-      {view.canSkip && <SkipSheet view={view} open={skipOpen} onClose={() => setSkipOpen(false)} onConfirm={confirmSkip} />}
+      {view.canSkip && (
+        <SkipSheet
+          view={view}
+          open={skipOpen}
+          onClose={() => setSkipOpen(false)}
+          onConfirm={confirmSkip}
+          onRefresh={onRefresh}
+          onNoLongerActive={handleNoLongerActive}
+          onContactSupport={() => onContactSupport(copy.support.subjects.skip)}
+        />
+      )}
     </>
   );
 }
